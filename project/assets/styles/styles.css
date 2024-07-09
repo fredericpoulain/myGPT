@@ -1,0 +1,369 @@
+/*@tailwind base;*/
+/*@tailwind components;*/
+/*@tailwind utilities;*/
+:root {
+  --dark1: #1c1d1e;
+  --dark2: #303133;
+  --grey1: #484949;
+  --green1: #17ab4b;
+  --green2: #5ea584;
+  --green3: #243723;
+  --overhover: hsla(240, 9%, 59%, 0.1);
+  --white1: #e6e6e6;
+  --white2: #cccccc;
+
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+body{
+  background-color: var(--dark1);
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+nav {
+  height: 50px;
+  background: var(--dark2);
+  color: var(--white1);
+  display: none;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  width: 100%;
+}
+
+nav div {
+  margin: 0 20px;
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.hamMenu {
+  background: var(--dark2);
+  color: var(--white1);
+  border: none;
+  cursor: pointer;
+}
+
+.hamMenu span {
+  display: block;
+  width: 25px;
+  height: 3px;
+  margin-bottom: 5px;
+  position: relative;
+  background: var(--white1);
+  border-radius: 3px;
+  z-index: 1;
+  transform-origin: 4px 0;
+  transition: transform 0.2s cubic-bezier(0.77, 0.2, 0.05, 1),
+  background 0.5s cubic-bezier(0.77, 0.2, 0.05, 1), opacity 0.55s ease;
+}
+
+.hamMenu:hover span {
+  background: var(--white1);
+}
+
+.main {
+  display: flex;
+}
+
+/*Side Nav*/
+.sidenav {
+  height: 100vh;
+  width: 20rem;
+  background-color: var(--dark2);
+  font-size: 1rem;
+  color: var(--white1);
+  position: fixed;
+  left: 0;
+  top: 0;
+  margin: 0;
+  z-index: 11;
+  overflow: hidden;
+}
+
+.sidenav .sidenavContent {
+}
+
+.close {
+  position: absolute;
+  right: 7px;
+  top: 17px;
+  background: var(--dark2);
+  color: var(--white1);
+  border: 1px solid grey;
+  border-radius: 5px;
+  cursor: pointer;
+  display: none;
+  width: 40px;
+  height: 40px;
+
+}
+.close span {
+  width: 40px;
+  height: 40px;
+  position: relative;
+}
+.close span:before,
+.close span:after {
+  position: absolute;
+  content: " ";
+  top: -16px;
+  left: -1px;
+  height: 33px;
+  width: 3px;
+  background-color: var(--white1);
+}
+.close span:before {
+  transform: rotate(45deg);
+}
+.close span:after {
+  transform: rotate(-45deg);
+}
+
+.close:hover span:after,
+.close:hover span:before {
+  background: var(--white1);
+}
+
+.newChatBtn {
+  background: var(--dark2);
+  color: var(--white1);
+  border: none;
+  width: 85%;
+  cursor: pointer;
+  text-align: start;
+  padding: 0.7rem;
+  font-size: 24px;
+  transition: 0.2s;
+  margin-top : 15px;
+}
+
+.newChatBtn:hover {
+  color: var(--green1);
+}
+
+.new-chat {
+  cursor: pointer;
+}
+
+.savedChats {
+  margin: 0.5rem 0;
+  overflow-y: auto;
+}
+
+.savedChats h2 {
+  margin: 5px auto 20px 10px;
+}
+
+.savedChats a {
+  display: inline-block;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 95%;
+  padding-left: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: .2s
+}
+
+.savedChats a:hover {
+  background-color: var(--green1);
+  color: var(--dark1);
+}
+
+.savedChats p:hover {
+}
+
+
+
+.config {
+  margin: 0.5rem 0;
+  position: absolute;
+  bottom: 0;
+  width: inherit;
+  background: var(--dark2);
+}
+
+.config p {
+  padding: 0.7rem;
+  cursor: pointer;
+  margin: 5px 0;
+  border-radius: 5px;
+}
+
+.config p:hover {
+  background: var(--overhover);
+}
+
+.config hr {
+  width: 19rem;
+}
+
+/*Main Content Body*/
+.contentChat {
+  text-align: center;
+  margin-left: 20rem;
+  flex: 1;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.messages {
+  padding-bottom: 100px;
+  margin-top: 20px;
+}
+
+.messageDiv {
+  display: flex;
+  margin: 10px auto;
+  max-width: 800px;
+  justify-content: end;
+}
+
+.userMessage {
+  /*background: rgb(150, 150, 202);*/
+  padding: 10px;
+
+}
+.messageContentUser{
+  max-width: 70%;
+  background-color: var(--green1);
+  padding: 10px;
+  border-radius: 8px;
+}
+.gptMessage {
+  padding: 10px;
+}
+
+.messageProfilePic {
+  margin-right: 20px;
+  margin-top: 2px;
+  width: 40px;
+  height: 40px;
+  color: var(--white1);
+
+  margin-top: 5px;
+  font-size: 28px;
+}
+
+.messageContent {
+  text-align: start;
+  margin-top: 5px;
+}
+.gptMessage .messageContent{
+  color: var(--white1);
+}
+.messageContent p {
+  margin-bottom: 20px;
+}
+
+.inputSection {
+  position: fixed;
+  bottom: 0;
+  width: -webkit-fill-available;
+  width: -moz-available;
+  /*background-color: lightgray;*/
+  padding: 10px;
+  background-image:
+          linear-gradient(180deg,
+                  rgba(243, 248, 255, 0),
+                  var(--green3));
+}
+/*modif*/
+.inputSection form {
+  background-color: var(--dark2);
+  width: 80%;
+  max-width: 600px;
+  border: 3px solid var(--green1);
+  border-radius: 8px;
+  padding: 10px 0 10px 10px;
+  margin-right: auto;
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  height: 80px;
+}
+/*.formAddMessage{*/
+/*  width: 100%;*/
+/*  height: 100%;*/
+/*}*/
+.inputSection textarea {
+  background-color: var(--dark2);
+  /*color: var(--white2);*/
+  /*font-size: 16px;*/
+  width: 100%;
+  /*max-width: 600px;*/
+  resize: none;
+  /*border: 3px solid var(--green1);*/
+  /*border-radius: 8px;*/
+  /*padding: 10px;*/
+  border: none;
+  outline: none;
+  color: var(--white2);
+  font-size: 16px;
+}
+.submitIcon{
+
+  height: 60%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /*background-color: #0f6674;*/
+}
+.submitIcon button{
+  padding:10px;
+  font-size: 24px;
+  color: var(--white2);
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  transition: .2s;
+}
+.submitIcon button:hover{
+  color: var(--white1);
+}
+/*original*/
+/*.inputSection textarea {*/
+/*    background-color: var(--dark2);*/
+/*    color: var(--white2);*/
+/*    font-size: 16px;*/
+/*    width: 80%;*/
+/*    max-width: 600px;*/
+/*    resize: none;*/
+/*    border: 3px solid var(--green1);*/
+/*    border-radius: 8px;*/
+/*    padding: 10px;*/
+/*}*/
+
+.inputSection textarea:focus {
+  outline: none;
+}
+
+@media screen and (max-width: 975px) {
+  nav {
+    display: flex;
+    z-index: 1;
+  }
+  .close {
+    display: block;
+  }
+  .sidenav {
+    position: fixed;
+    left: -400px;
+  }
+  .contentChat {
+    margin: 50px 0 0 0;
+  }
+}
