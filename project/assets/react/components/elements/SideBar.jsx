@@ -21,9 +21,9 @@ export default function SideBar(){
 
                     </div>
 
-                    <div className="config">
+                    <div className="resetSession">
                         <hr/>
-                        <p>Log out</p>
+                        <a href="/resetSession">Reset</a>
                     </div>
                 </div>
             </div>

@@ -1,15 +1,12 @@
 import React from "react";
 import InputSection from "./elements/InputSection";
-export default function ContentChat({addMessage}){
+import MessageList from "./elements/MessageList";
 
+export default function ContentChat({ isAddingMessage, chat, addMessage }) {
     return (
-        <>
-            <div className="contentChat">
-
-                <div className="messages">
-                </div>
-                <InputSection addMessage={addMessage}></InputSection>
-            </div>
-        </>
-    )
+        <div className="contentChat">
+            <MessageList isAddingMessage={isAddingMessage} messages={chat} />
+            <InputSection addMessage={addMessage} />
+        </div>
+    );
 }

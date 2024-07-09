@@ -23,6 +23,7 @@ body{
   font-family: "Roboto", sans-serif;
   font-weight: 400;
   font-style: normal;
+  line-height: 1.5;
 }
 nav {
   height: 50px;
@@ -183,28 +184,36 @@ nav div {
 .savedChats p:hover {
 }
 
+/*.reset a{*/
+/*  text-decoration: none;*/
+/*  color: var(--white1);*/
+/*}*/
 
-
-.config {
-  margin: 0.5rem 0;
+.resetSession {
   position: absolute;
   bottom: 0;
   width: inherit;
   background: var(--dark2);
 }
 
-.config p {
+.resetSession a {
   padding: 0.7rem;
   cursor: pointer;
   margin: 5px 0;
   border-radius: 5px;
+  text-decoration: none;
+  color: var(--white2);
+  display: inline-block;
+  text-transform: uppercase;
+  font-weight: 700;
+  transition: .2s;
 }
 
-.config p:hover {
-  background: var(--overhover);
+.resetSession a:hover {
+  color: var(--green1);
 }
 
-.config hr {
+.resetSession hr {
   width: 19rem;
 }
 
@@ -220,17 +229,25 @@ nav div {
 }
 
 .messages {
-  padding-bottom: 100px;
+  padding-bottom: 150px;
+  padding-left: 20px;
+  padding-right: 20px;
   margin-top: 20px;
+  width: 100%;
 }
 
 .messageDiv {
   display: flex;
   margin: 10px auto;
   max-width: 800px;
+
+}
+.userMessage .messageDiv{
   justify-content: end;
 }
-
+.gptMessage .messageDiv{
+  justify-content: start;
+}
 .userMessage {
   /*background: rgb(150, 150, 202);*/
   padding: 10px;
@@ -283,8 +300,8 @@ nav div {
 /*modif*/
 .inputSection form {
   background-color: var(--dark2);
-  width: 80%;
-  max-width: 600px;
+  width: 90%;
+  max-width: 900px;
   border: 3px solid var(--green1);
   border-radius: 8px;
   padding: 10px 0 10px 10px;
@@ -349,6 +366,17 @@ nav div {
 
 .inputSection textarea:focus {
   outline: none;
+}
+
+.codeSnippet{
+  background-color: var(--white1);
+  padding: 1px 10px;
+  color: black;
+  font-weight: 700;
+}
+code,
+.codeSnippet{
+  border-radius: 8px;
 }
 
 @media screen and (max-width: 975px) {

@@ -2,6 +2,10 @@
 
 namespace App\Controller;
 
+use App\Service\CreateArrayService;
+use App\Service\FormatTextService;
+use OpenAI\Client;
+use Parsedown;
 use Random\RandomException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -9,101 +13,112 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class HomeController extends AbstractController
 {
+    private $parsedown;
+    public function __construct(private readonly Client $openAIClient){
+        $this->parsedown = new Parsedown();
+    }
     #[Route('/', name: 'app_home')]
     public function home(): Response
     {
-
         return $this->render('home/home.html.twig', [
             'controller_name' => 'HomeController',
         ]);
     }
 
-    #[Route('/infoUser', name: 'app_infoUser')]
-    public function name(): JsonResponse
-    {
-        $name = 'Fred';
-        $age = '39 ans';
-        return $this->json(compact('name', 'age'));
-    }
-    #[Route('/messages', name: 'app_messages')]
-    public function messages(): JsonResponse
-    {
-        $userMessage = "1 - can openai perform queries if mongodb uri is given? \n jdnldfjnldfnbltjhrtlk lk,gltrkgn lkt,htrl,h 2 - No, OpenAI cannot perform queries directly against a MongoDB database by itself. OpenAI is primarily an artificial intelligence language model that is designed to perform natural language processing tasks such as generating text or answering questions.";
-        $gptMessage = "2 - No, OpenAI cannot perform queries directly against a MongoDB database by itself. \n OpenAI is primarily an artificial intelligence language model that is designed to perform natural language processing tasks such as generating text or answering questions. To execute queries against a MongoDB database, you need to use a driver library or ORM in your server-side code to establish a connection with the database and execute queries. Once you have the query results, you can then pass them to OpenAI for processing and analysis. For example, you could use a Node.js MongoDB driver such as Mongoose to connect to your MongoDB database, execute queries and retrieve data. Once you have the data, you could then pass it to OpenAI to perform natural language processing tasks like summarization or sentiment analysis. In summary, you would need to use both MongoDB driver and OpenAI API to execute queries against the database and perform natural language processing tasks on the results.";
-
-        return $this->json(compact('userMessage', 'gptMessage'));
-    }
-
     /**
-     * @throws RandomException
      */
     #[Route('/getChat', name: 'app_getChat')]
-    public function getChatSession(SessionInterface $session): JsonResponse
+    public function getChatSession(SessionInterface $session, CreateArrayService $createArrayService): JsonResponse
     {
-//        $session->remove('chatSession');
+
         $chatSession = $session->get('chatSession', []);
-        $messages = $chatSession['messages'] ?? [];
-        return $this->json(compact('messages'));
+        $arrayData = [];
+        if (!empty($chatSession)) {
+            $arrayData = $createArrayService->CreateArray($chatSession);
+        }
+
+        return $this->json($arrayData); // Retourner les données de la session de chat au format JSON
+
+//        $messages = $chatSession['messages'] ?? [];
+//        return $this->json(compact('messages'));
     }
 
     /**
      * @throws RandomException
      */
     #[Route('/addChat', name: 'app_addChat')]
-    public function addChat(SessionInterface $session, Request $request): JsonResponse
+    public function addChat(
+        SessionInterface $session,
+        Request $request,
+        FormatTextService $formatTextService,
+        CreateArrayService $createArrayService): JsonResponse
     {
+//        $response = $this->openAIClient->models()->list();
+//        dd($response);
+
+
         $chatSession = $session->get('chatSession', []);
 
         $content = $request->getContent();
-        $data = json_decode($content, true);
+        $data = json_decode($content);
         $messageUser = $data->message;
 
-//        ******** APPEL API CHATGPT ********
-        $messageGpt = "J suis chatGPT, voici mon message...";
-
-
-        $isSuccessfull = !empty($messageGpt);
-
-        if (empty($chatSession)){
+        // Initialiser la session si elle est vide
+        if (empty($chatSession)) {
             $sessionId = bin2hex(random_bytes(16));
             $chatSession['sessionId'] = $sessionId;
+            $chatSession['messages'] = [
+                ['role' => 'system', 'content' => 'Vous êtes un assistant.']
+            ];
         }
 
-        $chatSession['messages'][] = [
-            'userMessage' => $messageUser,
-            'messageGpt' => $messageGpt,
-        ];
+        // Ajouter le message de l'utilisateur à la liste des messages
+        $chatSession['messages'][] = ['role' => 'user', 'content' => $messageUser];
+
+        // Appel API OpenAI avec l'historique complet des messages
+        $result = $this->openAIClient->chat()->create([
+            'model' => 'gpt-3.5-turbo',
+            'messages' => $chatSession['messages']
+        ]);
+        $output = $result['choices'][0]['message']['content'];
+//        dd($result['choices'][0]['message']['content']);
+        $messageGpt = $formatTextService->formatText($output, $this->parsedown);
+        // Ajouter la réponse de GPT à la liste des messages
+        $chatSession['messages'][] = ['role' => 'assistant', 'content' => $messageGpt];
+
+        // Mettre à jour la session
         $session->set('chatSession', $chatSession);
-        dump($chatSession);
+
+        // Déterminer si la réponse a été réussie
+        $isSuccessfull = !empty($messageGpt);
+        // Retourner la réponse JSON
         return $this->json([
             'isSuccessfull' => $isSuccessfull,
-            'data' => $chatSession
+            'data' => $createArrayService->CreateArray($chatSession)
         ]);
     }
+
+    /**
+     * @throws TransportExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws DecodingExceptionInterface
+     * @throws ClientExceptionInterface
+     */
+    #[Route('/resetSession', name: 'app_resetSession')]
+    public function resetSession(SessionInterface $session): \Symfony\Component\HttpFoundation\RedirectResponse
+    {
+
+        $session->remove('chatSession');
+        return $this->redirectToRoute('app_home');
+    }
 }
-//        if (!empty($chatSession)){
-//
-//        }else{
-//            $sessionId = bin2hex(random_bytes(16));
-//
-//            $chatSession = [
-//                'sessionId' => $sessionId,
-//                'messages' => [
-//                    [
-//                        'messageId' => 'msg-1',
-//                        'sender' => 'user',
-//                        'content' => 'Bonjour, comment ça va ?',
-//                        'timestamp' => '2024-07-08T12:00:00Z'
-//                    ],
-//                    [
-//                        'messageId' => 'msg-2',
-//                        'sender' => 'chatgpt',
-//                        'content' => 'Bonjour ! Je vais bien, merci. Comment puis-je vous aider aujourd\'hui ?',
-//                        'timestamp' => '2024-07-08T12:00:05Z'
-//                    ]
-//                ]
-//            ];
-//        }
