@@ -9,8 +9,10 @@
             </a>
             <div class="savedChats">
                 <h2>Historique</h2>
-                {% if app.user %}
-                    {{ dump(app.user) }}
+                {% if chats is not empty %}
+                    {% for chat in chats %}
+                        <a href="#"><i class="fa-regular fa-comment"></i>{{ chat.name }}</a>
+                    {% endfor %}
                 {% endif %}
 
             </div>

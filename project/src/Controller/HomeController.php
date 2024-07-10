@@ -30,11 +30,15 @@ class HomeController extends AbstractController
         $this->parsedown = new Parsedown();
     }
     #[Route('/', name: 'app_home')]
-    public function home(): Response
+    public function home(SessionInterface $session): Response
     {
+        $chats = [];
+        if ($this->getUser()){
 
+            $chats = $this->getUser()->getChats()->toArray();
+        }
         return $this->render('home/home.html.twig', [
-            'controller_name' => 'HomeController',
+            'chats' => $chats,
         ]);
     }
 
@@ -43,6 +47,7 @@ class HomeController extends AbstractController
     #[Route('/getChat', name: 'app_getChat')]
     public function getChatSession(SessionInterface $session, CreateArrayService $createArrayService): JsonResponse
     {
+
 
         $chatSession = $session->get('chatSession', []);
         $arrayData = [];
@@ -124,7 +129,7 @@ class HomeController extends AbstractController
                 $chat->setUser($this->getUser());
                 $chat->setSessionId($sessionId);
                 $chat->setSessiondata($chatSession);
-
+                $chat->setName(substr($chatSession['messages'][1]['content'], 0, 25) . '...');
                 $entityManager->persist($chat);
                 $entityManager->flush();
 

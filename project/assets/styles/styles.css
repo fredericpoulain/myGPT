@@ -25,6 +25,7 @@
 
 }
 
+
 * {
   margin: 0;
   padding: 0;
@@ -187,7 +188,9 @@ nav div {
   padding-bottom: 5px;
   border-radius: 8px;
   cursor: pointer;
-  transition: .2s
+  transition: .2s;
+  text-decoration: none;
+  color: var(--white1);
 }
 
 .savedChats a:hover {
@@ -195,7 +198,8 @@ nav div {
   color: var(--dark1);
 }
 
-.savedChats p:hover {
+.savedChats a i {
+  margin-right: 10px;
 }
 
 /*.reset a{*/
