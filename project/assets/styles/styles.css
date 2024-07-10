@@ -217,6 +217,10 @@ nav div {
   width: 19rem;
 }
 
+.logoOpenAI{
+  margin-top: 150px;
+  color: var(--white1);
+}
 /*Main Content Body*/
 .contentChat {
   text-align: center;

@@ -97,7 +97,8 @@ class HomeController extends AbstractController
 
         // Mettre à jour la session
         $session->set('chatSession', $chatSession);
-
+//        dump($chatSession);
+//        dd($createArrayService->CreateArray($chatSession));
         // Déterminer si la réponse a été réussie
         $isSuccessfull = !empty($messageGpt);
         // Retourner la réponse JSON

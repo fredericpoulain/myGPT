@@ -12,6 +12,7 @@ class CreateArrayService
         ];
         $tempUserMessage = "";
 
+
         foreach ($inputArray["messages"] as $message) {
             if ($message["role"] === "user") {
                 // Stocker le message de l'utilisateur temporairement
