@@ -2,8 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\Chat;
+use App\Repository\ChatRepository;
 use App\Service\CreateArrayService;
 use App\Service\FormatTextService;
+use Doctrine\ORM\EntityManagerInterface;
 use OpenAI\Client;
 use Parsedown;
 use Random\RandomException;
@@ -61,10 +64,13 @@ class HomeController extends AbstractController
         SessionInterface $session,
         Request $request,
         FormatTextService $formatTextService,
-        CreateArrayService $createArrayService): JsonResponse
+        CreateArrayService $createArrayService,
+        EntityManagerInterface $entityManager,
+        ChatRepository $chatRepository): JsonResponse
     {
 //        $response = $this->openAIClient->models()->list();
 //        dd($response);
+
 
 
         $chatSession = $session->get('chatSession', []);
@@ -103,6 +109,38 @@ class HomeController extends AbstractController
 //        dd($createArrayService->CreateArray($chatSession));
         // Déterminer si la réponse a été réussie
         $isSuccessfull = !empty($messageGpt);
+
+
+        //enregistrement en BDD
+        //*********************
+        if ($this->getUser()) {
+
+            $sessionId = $chatSession['sessionId'];
+            $chat = $chatRepository->findOneBy(['sessionid' => $sessionId]);
+
+            //C'est une nouvelle discussion
+            if (!$chat){
+                $chat = new Chat();
+                $chat->setUser($this->getUser());
+                $chat->setSessionId($sessionId);
+                $chat->setSessiondata($chatSession);
+
+                $entityManager->persist($chat);
+                $entityManager->flush();
+
+            //si chat se trouve en base de donnée
+            }else{
+                $chat->setSessiondata($chatSession);
+                $entityManager->flush();
+            }
+        }
+
+        //*********************
+        //*********************
+
+
+
+
         // Retourner la réponse JSON
         return $this->json([
             'isSuccessfull' => $isSuccessfull,
@@ -111,16 +149,13 @@ class HomeController extends AbstractController
     }
 
     /**
-     * @throws TransportExceptionInterface
      * @throws ServerExceptionInterface
      * @throws RedirectionExceptionInterface
-     * @throws DecodingExceptionInterface
      * @throws ClientExceptionInterface
      */
     #[Route('/resetSession', name: 'app_resetSession')]
     public function resetSession(SessionInterface $session): \Symfony\Component\HttpFoundation\RedirectResponse
     {
-
         $session->remove('chatSession');
         return $this->redirectToRoute('app_home');
     }

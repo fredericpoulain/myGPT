@@ -1,0 +1,30 @@
+<div class="sidenav">
+    <div class="sidenavContent">
+        <button class="close"><span></span></button>
+        <div class="mainSidebar">
+            <a href="/resetSession">
+                <button class="newChatBtn">
+                    <i class="fa-regular fa-comments"></i> Nouveau
+                </button>
+            </a>
+            <div class="savedChats">
+                <h2>Historique</h2>
+                {% if app.user %}
+                    {{ dump(app.user) }}
+                {% endif %}
+
+            </div>
+
+        </div>
+
+        <div class="resetSession">
+            <hr/>
+            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+            <a href="/logout">Déconnexion</a>
+            {% else %}
+            <a href="/connexion">Se Connecter</a>
+            {% endif %}
+
+        </div>
+    </div>
+</div>

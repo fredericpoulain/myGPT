@@ -57,9 +57,9 @@ export function Home() {
             {loading && 'chargement...!'}
             {errors && <div>{errors}</div>}
             <div>
-                <NavMobile />
+                {/*<NavMobile />*/}
                 <div className="main">
-                    <SideBar />
+                    {/*<SideBar />*/}
                     <ContentChat isAddingMessage={isAddingMessage} chat={chat} addMessage={addMessage} canScroll={canScroll} setCanScroll={setCanScroll} />
                 </div>
             </div>
