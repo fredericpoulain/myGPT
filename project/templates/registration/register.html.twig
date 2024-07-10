@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Enregistrement{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('formPage') }}
+{% endblock %}
+{% block body %}
+    {% for flash_error in app.flashes('verify_email_error') %}
+        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+    {% endfor %}
+
+    <div class="containerFormRegister">
+
+
+        {{ form_errors(registrationForm) }}
+
+        {{ form_start(registrationForm) }}
+        <h1 class="titleForm">S'enregistrer</h1>
+        {{ form_row(registrationForm.email) }}
+        {{ form_row(registrationForm.name) }}
+        {{ form_row(registrationForm.plainPassword, {
+            label: 'Mot de passe *'
+        }) }}
+        <div class="agreeTerms">{{ form_row(registrationForm.agreeTerms) }}</div>
+
+
+        <button type="submit" class="btn">Valider</button>
+        {{ form_end(registrationForm) }}
+        <div class="login">
+            <a href="{{ path('app_login') }}">Connexion</a>
+        </div>
+    </div>
+
+
+{% endblock %}

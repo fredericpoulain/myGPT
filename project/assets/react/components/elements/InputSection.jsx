@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 
-export default function InputSection({ addMessage }) {
+export default function InputSection({ addMessage}) {
     const [message, setMessage] = useState("");
+
+
 
     const handleSubmit = (e) => {
         e.preventDefault();

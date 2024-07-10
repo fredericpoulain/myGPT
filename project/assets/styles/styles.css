@@ -8,9 +8,20 @@
   --green1: #17ab4b;
   --green2: #5ea584;
   --green3: #243723;
+  --blue2: #0094ff;
+  --blue1: #2da5fb;
   --overhover: hsla(240, 9%, 59%, 0.1);
   --white1: #e6e6e6;
   --white2: #cccccc;
+
+  /*color alert*/
+  --errorColor: #d75966;
+  --errorBackgroundColor: #d75966;
+  --errorTextColor: #230a0d;
+  --successColorText: #0e3b23;
+  --successBackgroundColor: #27db7c;
+  --infoColorText: #09314a;
+  --infoBackgroundColor: #68aad5;
 
 }
 
@@ -148,7 +159,10 @@ nav div {
 .newChatBtn:hover {
   color: var(--green1);
 }
-
+/*.new-chatBtn {*/
+/*  text-decoration: none;*/
+/*  color: var(--white1);*/
+/*}*/
 .new-chat {
   cursor: pointer;
 }
@@ -238,6 +252,7 @@ nav div {
   padding-right: 20px;
   margin-top: 20px;
   width: 100%;
+
 }
 
 .messageDiv {
@@ -281,6 +296,8 @@ nav div {
 .messageContent {
   text-align: start;
   margin-top: 5px;
+  /*width: 100%;*/
+  /*max-width: 100%;*/
 }
 .gptMessage .messageContent{
   color: var(--white1);
@@ -381,6 +398,94 @@ nav div {
 code,
 .codeSnippet{
   border-radius: 8px;
+}
+
+/* Scroll Down */
+
+.scrolldownWrapper {
+  position: fixed;
+  bottom: 130px;
+  width: -webkit-fill-available;
+  width: -moz-available;
+}
+
+
+
+
+.scrolldown {
+  border: 2px solid var(--white1);
+  border-radius: 30px;
+  height: 46px;
+  margin: 0 auto 8px;
+  text-align: center;
+  width: 30px;
+}
+
+.scrolldown-p1,
+.scrolldown-p2 {
+  animation-duration: 1.5s;
+  animation-name: scrolldown;
+  animation-iteration-count: infinite;
+  fill: var(--white1);
+}
+
+.scrolldown-p2 {
+  animation-delay: .75s;
+}
+@keyframes scrolldown {
+  0% {
+    opacity: 0;
+    transform: translate(0, -8px);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(0, 8px);
+  }
+}
+
+/* ********** MESSAGES FLASH ************ */
+.blocMessageFlash {
+  width: 100%;
+  max-width: 950px;
+  margin: 20px auto 10px;
+
+}
+
+.MessageFlash {
+  margin-bottom: 10px;
+  padding: 10px 30px;
+  border-radius: 10px;
+  position: relative;
+}
+
+.hideFlashMessage {
+  cursor: pointer;
+  position: absolute;
+  top: 5px;
+  right: 0;
+  padding: 6px 10px;
+}
+
+.successMessageFlash {
+  color: var(--successColorText);
+  background-color: var(--successBackgroundColor);
+  text-align: center;
+}
+
+.errorMessageFlash {
+  color: var(--errorTextColor);
+  background-color: var(--errorBackgroundColor);
+  text-align: center;
+}
+
+.infoMessageFlash {
+  color: var(--infoColorText);
+  background-color: var(--infoBackgroundColor);
+  text-align: center;
 }
 
 @media screen and (max-width: 975px) {

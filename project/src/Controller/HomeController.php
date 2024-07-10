@@ -29,6 +29,7 @@ class HomeController extends AbstractController
     #[Route('/', name: 'app_home')]
     public function home(): Response
     {
+
         return $this->render('home/home.html.twig', [
             'controller_name' => 'HomeController',
         ]);
@@ -87,6 +88,7 @@ class HomeController extends AbstractController
         // Appel API OpenAI avec l'historique complet des messages
         $result = $this->openAIClient->chat()->create([
             'model' => 'gpt-3.5-turbo',
+//            'model' => 'gpt-4o',
             'messages' => $chatSession['messages']
         ]);
         $output = $result['choices'][0]['message']['content'];

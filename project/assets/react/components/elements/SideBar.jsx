@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function SideBar(){
+export default function SideBar() {
 
     return (
         <>
@@ -8,13 +8,13 @@ export default function SideBar(){
                 <div className="sidenavContent">
                     <button className="close"><span></span></button>
                     <div className="mainSidebar">
-                        <button className="newChatBtn">
-                            <i className="fa-regular fa-comments"></i> Nouveau
-                        </button>
+                        <a href="/resetSession">
+                            <button className="newChatBtn">
+                                <i className="fa-regular fa-comments"></i> Nouveau
+                            </button>
+                        </a>
                         <div className="savedChats">
                             <h2>Historique</h2>
-                            <a>Mes composants react ne sont pas chargés ..; j'utilise symfony ux</a>
-                            <a>Mes composants react ne sont pas chargés ..; j'utilise symfony ux</a>
 
 
                         </div>
@@ -23,7 +23,7 @@ export default function SideBar(){
 
                     <div className="resetSession">
                         <hr/>
-                        <a href="/resetSession">Reset</a>
+                        <a href="/connexion">Se Connecter</a>
                     </div>
                 </div>
             </div>

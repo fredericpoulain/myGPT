@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Connexion{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('formPage') }}
+{% endblock %}
+{% block body %}
+    <div class="containerForm">
+        <form method="post">
+            {% if error %}
+                <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+            {% endif %}
+
+
+            <h1 class="titleForm">Se connecter</h1>
+
+            <div>
+                <label for="inputEmail">Email</label>
+                <input type="email" value="" name="email" id="inputEmail" class=""
+                       autocomplete="email" required autofocus>
+            </div>
+
+            <div>
+                <label for="inputPassword">Mot de passe</label>
+                <input type="password" name="password" id="inputPassword" class=""
+                       autocomplete="current-password"
+                       required>
+            </div>
+
+
+            <input type="hidden" name="_csrf_token"
+                   value="{{ csrf_token('authenticate') }}"
+            >
+
+            <div class="checkbox mb-3">
+                <label>
+                    <input type="checkbox" name="_remember_me"> Se souvenir
+                </label>
+            </div>
+
+            <button class="btnLogin" type="submit">
+                Connexion
+            </button>
+
+
+        </form>
+        <div class="forgotBloc">
+            <a href="/oubli-password">J'ai oublié mon mot de passe</a>
+        </div>
+        <div class="register">
+            <a href="{{ path('app_register') }}">Se créer un compte</a>
+        </div>
+    </div>
+
+{% endblock %}

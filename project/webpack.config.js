@@ -22,6 +22,7 @@ Encore
      */
     .addEntry('app', './assets/react/main.jsx')
     .addStyleEntry('styles', './assets/styles/styles.css')
+    .addStyleEntry('formPage', './assets/styles/formPage.css')
 
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.

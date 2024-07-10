@@ -8,6 +8,7 @@ import { fetchDataFromServer } from "./utils/functions";
 export function Home() {
     const [chat, setChat] = useState([]);
     const [isAddingMessage, setIsAddingMessage] = useState(false);
+    const [canScroll, setCanScroll] = useState(false);
 
     //***********************************************
     //uniquement lors du chargement de la page
@@ -48,6 +49,7 @@ export function Home() {
         }
         // On arrête le chargement du "Loader"
         setIsAddingMessage(false); // Arrêter le chargement
+        setCanScroll(true)
     };
 
     return (
@@ -58,7 +60,7 @@ export function Home() {
                 <NavMobile />
                 <div className="main">
                     <SideBar />
-                    <ContentChat isAddingMessage={isAddingMessage} chat={chat} addMessage={addMessage} />
+                    <ContentChat isAddingMessage={isAddingMessage} chat={chat} addMessage={addMessage} canScroll={canScroll} setCanScroll={setCanScroll} />
                 </div>
             </div>
         </>
