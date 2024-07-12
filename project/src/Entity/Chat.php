@@ -5,7 +5,10 @@ namespace App\Entity;
 use App\Repository\ChatRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
+#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
+#[UniqueEntity(fields: ['email'], message: 'Email non valide')]
 #[ORM\Entity(repositoryClass: ChatRepository::class)]
 class Chat
 {

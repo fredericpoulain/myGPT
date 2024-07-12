@@ -181,7 +181,7 @@ class HomeController extends AbstractController
             if ($this->getUser()->getId() === $chat->getUser()->getId()) {
                 $chatSession = $session->get('chatSession', []);
                 //Si la conversation supprimée est la même que celle de la session en cours, alors on vide aussi la session
-                if ($chatSession['sessionId'] === $chat->getSessionid()) {
+                if (isset($chatSession['sessionId']) && $chatSession['sessionId'] === $chat->getSessionid()) {
                     $session->remove('chatSession');
                 }
                 $entityManager->remove($chat);

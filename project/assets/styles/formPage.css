@@ -119,3 +119,11 @@ form button:hover {
 .goHome a:hover{
     color: var(--green1);
 }
+
+ul li{
+    list-style: none;
+    color: var(--errorColor);
+}
+.alert-danger{
+    color: var(--errorColor);
+}
