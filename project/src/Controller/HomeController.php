@@ -92,12 +92,14 @@ class HomeController extends AbstractController
                 return $this->json(['isSuccessfull' => false, 'data' => []]);
             }
 
+            $content = "Vous êtes un assistant expert en langages informatique et vous utilisez les meilleures pratiques de codage. Les solutions que vous apportez sont systématiquement les plus simples, tout en respectant le principe SOLID et de la 'Clean Architecture'.";
+            $content = "Vous êtes assistant, et expert en communication Linkedin et expert consulting IT et coach IT.";
             // On initialise la session si elle est vide
             if (empty($chatSession)) {
                 $chatSession = [
                     'sessionId' => bin2hex(random_bytes(16)),
                     'messages' => [
-                        ['role' => 'system', 'content' => "Vous êtes un assistant expert en langages informatique et vous utilisez les meilleures pratiques de codage. Les solutions que vous apportez sont systématiquement les plus simples, tout en respectant le principe SOLID et de la 'Clean Architecture'."]
+                        ['role' => 'system', 'content' => $content]
                     ]
                 ];
             }
@@ -119,14 +121,11 @@ class HomeController extends AbstractController
 
             $chatSession['messages'][] = ['role' => 'assistant', 'content' => $messageGpt];
 
-            //on n'enregistre pas le lien de l'image car l'image est éphémère
-            if ($model !== "dall-e-3") {
-                $session->set('chatSession', $chatSession);
-            }
 
 
-            // Enregistrement en base de données si l'utilisateur est connecté et si c'est un 'chat'
-            if ($this->getUser() && $model !== "dall-e-3") {
+            $session->set('chatSession', $chatSession);
+            // Enregistrement en base de données si l'utilisateur est connecté
+            if ($this->getUser()) {
 
                 $sessionId = $chatSession['sessionId'];
                 $chat = $chatRepository->findOneBy(['sessionid' => $sessionId]);
