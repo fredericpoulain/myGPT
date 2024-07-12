@@ -93,7 +93,6 @@ class HomeController extends AbstractController
             }
 
             $content = "Vous êtes un assistant expert en langages informatique et vous utilisez les meilleures pratiques de codage. Les solutions que vous apportez sont systématiquement les plus simples, tout en respectant le principe SOLID et de la 'Clean Architecture'.";
-            $content = "Vous êtes assistant, et expert en communication Linkedin et expert consulting IT et coach IT.";
             // On initialise la session si elle est vide
             if (empty($chatSession)) {
                 $chatSession = [
