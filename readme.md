@@ -1,135 +1,82 @@
-# Base DOCKER php8.3 Mysql and mailcatcher
+# MyGPTProject
 
-### Modify the docker-compose to customize the names of the containers:
-#### This is optional, change the name of:
-* customNameDB_Msql
-* customNamePhpMyAdmin
-* customNameProject
-* mailcatcher
+## Description
 
-### If the images have not yet been created:
+MyGPTProject est une application web interactive développée avec Symfony, Docker, et React. Elle permet aux utilisateurs d'interagir avec ChatGPT et DALL-E 3, de sélectionner le modèle AI souhaité, de générer des images, et de gérer leurs discussions enregistrées.
 
-```bash
-docker-compose build 
-docker-compose up -d
-```
+## Fonctionnalités Principales
 
-#### Or
-```bash
-docker-compose up --build -d
-```
+- **Interaction avec ChatGPT** : Interface web pour interagir avec ChatGPT.
+- **Mise en forme du code** : Utilisation de HighlightJS pour la mise en forme des extraits de code.
+- **Sélection du modèle AI** : Possibilité de choisir parmi plusieurs modèles OpenAI (GPT-4, GPT-4 Turbo, GPT-3.5 Turbo, DALL-E 3).
+- **Génération d'images avec DALL-E 3** : Création d'images à partir de descriptions textuelles.
+- **Enregistrement des discussions** : Sauvegarde des discussions en session et en base de données.
+- **Authentification utilisateur** : Système de connexion pour persister les discussions.
+- **Affichage et gestion de l'historique** : Consultation et suppression des discussions passées.
 
+## Configuration et Lancement de l'Application
 
-### If the images have already been created:
-#### And no modifications have been made to the configuration files
+### Prérequis
 
-```bash
-docker-compose up -d
-```
-## Enter the container:
-#### Attention! Modify "customNameProject" with the name of the container modified previously
-`docker exec -ti customNameProject bash`
-### Install the Symfony project:
-
-`composer create-project symfony/skeleton:"7.0.*" project`   
-`cd project`  
-`composer require webapp`  
+- Docker
+- Docker Compose
 
 
-### At the root of the Docker environment, run this command (linux)
-This will give you rights on all the content of the "project" folder.
-```bash
-sudo chown -R $USER ./
-```
-## Access
+### Instructions de Lancement
 
-The application:
-http://127.0.0.1:8000/
+1. **Cloner le dépôt :**
 
-phpMyAdmin:
-http://127.0.0.1:8080/
+    ```bash
+    git clone git@github.com:fredericpoulain/myGPT.git folderName
+    cd folderName
+    ```
 
-MailCatcher:
-http://127.0.0.1:1080/
+2. **Configurer et démarrer les conteneurs Docker :**
 
-## Configuration of DATABASE_URL in .env.local file:
+    ```bash
+    docker-compose up -d
+    ```
+
+3. **Accéder au conteneur de l'application Symfony :**
+
+    ```bash
+    docker exec -ti myGptProject bash
+    cd project
+    ```
+
+4. **Installer les dépendances Composer et Node.js :**
+
+   À l'intérieur du conteneur :
+
+    ```bash
+    composer install
+    npm install
+    npm run build
+    ```
+
+5. **Modification du fichier env.local :**
+
+**Modifier ou créer le fichier .env.local avec ces informations**
 
 `DATABASE_URL="mysql://root:@containerMySQLmyGpt:3306/myGptDB?serverVersion=8.3.0&charset=utf8mb4"`
 
-##### Note:
-- For users, we can also add the value of the "MYSQL_USER" and "MYSQL_PASSWORD" variables instead of 'root' (without password)
+`MAILER_DSN="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"`
 
-- "customNameContainerMySQL:3306": we cannot use 127.0.0.1:3306 because it does not point to the database container, but to the container itself.
-  So, instead of 127.0.0.1:3306, we need to put the name of the container to which we need to point.
+`OPENAI_API_KEY='sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'`
 
-- "customNameDATABASE" is indicated in the docker-compose. It's the name of the database that is automatically created during the 'build'
+6. **Accéder à l'application :**
 
-- "serverVersion=8.3.0" Modify "8.3.0" by the MySQL version. To check in phpMyAdmin/variables/search "version"
+   Ouvrez votre navigateur et allez à l'adresse [http://127.0.0.1:8000](http://127.0.0.1:8000)
 
-## Configuration of MAILER_DSN in .env.local file:
-`MAILER_DSN=smtp://mailcatcher:1025`
-##### Note:
-We would be tempted to do "MAILER_DSN=smtp://127.0.0.1:1025", but it will not work, we will have an error of the type:
+7. **Accéder à phpMyAdmin :**
 
-`connection could not be established with host "127.0.0.1:1025": stream_socket_client(): Unable to connect to 127.0.0.1:1025 (Connection refused)`
+   Ouvrez votre navigateur et allez à l'adresse [http://127.0.0.1:8080](http://127.0.0.1:8080)
 
-WHY: Symfony is not able to connect to Mailcatcher on 127.0.0.1:1025 because the Symfony application runs in a separate Docker container and 127.0.0.1 does not point to the Mailcatcher container, but to the container itself.
 
-So, instead of 127.0.0.1, we need to put the name of the container to which we need to point.
+## Auteur
 
-By doing a docker ps, we can see its name, which will be identical to that indicated in the docker-compose, or automatically generated if no specific name is specified.
+- **Frédéric Poulain**
+- [Mon profil Github](https://github.com/fredericpoulain)
 
 
 
-## Useful commands:
-
-### Build and start all services defined in your docker-compose.yml file.
-###### NOTE: to use if modifications of Dockerfile or docker-compose.yml files:
-
-```bash
-docker-compose up --build -d
-```
-
-
-### Open an interactive shell inside the Docker container :
-
-
-
-```bash
-docker exec -ti customNameProject bash
-```
-
-
-### Stop all running containers:
-
-```bash
-docker-compose down
-```
-
-
-
-
-### Start Docker containers in the background:
-
-
-
-```bash
-docker-compose up -d
-```
-
-
-  
-  
-
-
-## *** Caution ***
-### To remove all Docker images at once without specifying the name or ID of each image
-
-
-```bash
-docker rmi $(docker images -q) --force
-```
-### Stop and remove not only the containers, but also the volumes
-#### Allows taking into account the modifications of the docker-compose on the database
-#### **Attention**: The use of --volumes will remove all data stored in the Docker project volumes, which is irreversible.
-`docker-compose down --volumes`
