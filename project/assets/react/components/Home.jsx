@@ -9,7 +9,7 @@ export function Home() {
     const [chat, setChat] = useState([]);
     const [isAddingMessage, setIsAddingMessage] = useState(false);
     const [canScroll, setCanScroll] = useState(false);
-
+    const [selectedModel, setSelectedModel] = useState("gpt-4o");
     //***********************************************
     //uniquement lors du chargement de la page
     // On récupère les données de la session
@@ -20,6 +20,7 @@ export function Home() {
     //***********************************************
 
     const addMessage = async (message) => {
+        console.log(selectedModel);
         //on initialise avec un objet contenant le message de l'utilisateur, et celui de gtp à null car à se stade, la réponse n'est pas encore arrivée.
         const userMessage = { userMessage: message, messageGpt: null };
         //on place l'objet dans le 'useState'
@@ -29,7 +30,7 @@ export function Home() {
         setIsAddingMessage(true);
 
         //Envoi de la requête au serveur
-        const object = { message };
+        const object = { message, model: selectedModel };
         const result = await fetchDataFromServer(object, '/addChat', 'POST');
 
         //le serveur a répondu, on peut donc remplacer la valeur "null" par la réponse de chatGPT
@@ -60,7 +61,13 @@ export function Home() {
                 {/*<NavMobile />*/}
                 <div className="main">
                     {/*<SideBar />*/}
-                    <ContentChat isAddingMessage={isAddingMessage} chat={chat} addMessage={addMessage} canScroll={canScroll} setCanScroll={setCanScroll} />
+                    <ContentChat
+                        isAddingMessage={isAddingMessage}
+                        chat={chat} addMessage={addMessage}
+                        canScroll={canScroll}
+                        setCanScroll={setCanScroll}
+                        selectedModel={selectedModel}
+                        setSelectedModel={setSelectedModel} />
                 </div>
             </div>
         </>

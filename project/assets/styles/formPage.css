@@ -105,3 +105,17 @@ form button:hover {
     text-transform: uppercase;
     font-weight: bold;
 }
+
+.goHome{
+    margin-top: 50px;
+    text-decoration: none;
+    color: var(--white1);
+}
+.goHome a{
+    text-decoration: none;
+    color: var(--white1);
+    transition: .2s;
+}
+.goHome a:hover{
+    color: var(--green1);
+}

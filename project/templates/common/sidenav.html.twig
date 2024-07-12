@@ -1,18 +1,26 @@
 <div class="sidenav">
     <div class="sidenavContent">
-        <button class="close"><span></span></button>
+        <button class="close" onclick="handleMenuClose()"><span></span></button>
         <div class="mainSidebar">
-            <a href="/resetSession">
-                <button class="newChatBtn">
+            <a class="linkNewChat" href="/resetSession">
                     <i class="fa-regular fa-comments"></i> Nouveau
-                </button>
             </a>
+{#            <a class="linkNewChat" href="/resetSession">#}
+{#                <button class="newChatBtn">#}
+{#                    <i class="fa-regular fa-comments"></i> Nouveau#}
+{#                </button>#}
+{#            </a>#}
             <div class="savedChats">
-                <h2>Historique</h2>
+                <h2><i class="fa-solid fa-clock-rotate-left"></i> Historique</h2>
                 {% if chats is not empty %}
                     {% for chat in chats %}
-                        <a href="#"><i class="fa-regular fa-comment"></i>{{ chat.name }}</a>
+                        <div class="blocLink">
+                            <div class="link"><a href="{{path('app_loadChatSession',{sessionid:chat.sessionid}) }}"><i class="fa-regular fa-comment"></i>&nbsp; {{ chat.name }}</a>
+                            </div>
+                            <a href="{{ path('app_deleteChatSession', {sessionid:chat.sessionid}) }}" class="delete" onclick="return confirm('Certain de vouloir supprimer ce chat ?')"><i class="fa-solid fa-trash"></i></a>
+                        </div>
                     {% endfor %}
+
                 {% endif %}
 
             </div>
@@ -22,7 +30,8 @@
         <div class="resetSession">
             <hr/>
             {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-            <a href="/logout">Déconnexion</a>
+                <div class="isConnected"><span>Bonjour {{ app.user.name }}</span> <a href="/logout"><i class="fa-solid fa-right-from-bracket"></i></a></div>
+
             {% else %}
             <a href="/connexion">Se Connecter</a>
             {% endif %}

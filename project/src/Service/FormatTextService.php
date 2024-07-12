@@ -16,7 +16,10 @@ class FormatTextService
 
     private function addTagsPreAndCode($text): string
     {
-        $patternTripleBackticks = '/```(php|java|javascript|html|css)?(.*?)```/s';
+//        $patternTripleBackticks = '/```(php|java|javascript|html|css|typescript|js|jsx|python|c|cpp|ruby|swift|perl|rust|go|kotlin|scala|haskell|sql|r|pp|julia|lojure|groovy|elixir|bash|lua|dart|shell|assembly|objective-c
+//)?(.*?)```/s';
+        $patternTripleBackticks = '/```([a-zA-Z+-]+)?(.*?)```/s';
+
 
         // Remplacement des blocs de code par des balises <pre><code>
         $replacementTripleBackticks = '<pre class="theme-atom-one-dark"><code>$2</code></pre>';

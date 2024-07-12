@@ -3,16 +3,13 @@ import InputSection from "./elements/InputSection";
 import MessageList from "./elements/MessageList";
 import Scroll from "./elements/svg/Scroll";
 
-export default function ContentChat({ isAddingMessage, chat, addMessage, canScroll, setCanScroll}) {
+export default function ContentChat({isAddingMessage, chat, addMessage, canScroll, setCanScroll, selectedModel, setSelectedModel}) {
 
-    // //si isAddingMessage === false ET QUE canScroll === true
-    // if (!isAddingMessage && canScroll){
-    //     console.log("Scroller !")
-    //     //il faut afficher le composant <Scroll/> sous le composant InputSection
-    //     //ensuite le composant <Scroll/> disparait si l'utilisateur à effectuer une action de scroll vers le bas
-    //     //et setCanScroll repasse à false
-    // }
 
+
+    const handleSelectChange = (event) => {
+        setSelectedModel(event.target.value);
+    };
 
     const [showScroll, setShowScroll] = useState(false);
 
@@ -52,8 +49,16 @@ export default function ContentChat({ isAddingMessage, chat, addMessage, canScro
 
     return (
         <div className="contentChat">
-            <MessageList isAddingMessage={isAddingMessage} messages={chat} />
-            { showScroll && !isAddingMessage && canScroll && <Scroll /> }
+            <div className="blocSelect">
+                <select name="format" id="format" value={selectedModel} onChange={handleSelectChange}>
+                    <option value="gpt-4o">GPT-4o</option>
+                    <option value="gpt-4-turbo">GPT-4-turbo</option>
+                    <option value="gpt-3.5-turbo">GPT-3.5-turbo</option>
+                    <option value="dall-e-3">Dall-e-3</option>
+                </select>
+            </div>
+            <MessageList isAddingMessage={isAddingMessage} messages={chat}/>
+            {showScroll && !isAddingMessage && canScroll && <Scroll/>}
             <InputSection addMessage={addMessage}/>
         </div>
     );

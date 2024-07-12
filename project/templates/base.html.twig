@@ -15,9 +15,19 @@
             {{ encore_entry_link_tags('styles') }}
         {% endblock %}
 
-
+        {% block javascripts %}
+            {{ encore_entry_script_tags('app') }}
+        {% endblock %}
     </head>
     <body>
+    <nav>
+        <div class="ham-menu" onclick="handleMenuOpen()" >
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div>MyGpt</div>
+    </nav>
     {% include('common/flash.html.twig') %}
 
         {% block body %}
@@ -25,10 +35,7 @@
         {% endblock %}
 
 
-        {% block javascripts %}
-            {{ encore_entry_script_tags('app') }}
-        {% endblock %}
-{#        <script>hljs.highlightAll();</script>#}
+
         <script>
             function handleMenuOpen() {
                 document
@@ -41,6 +48,9 @@
                     .querySelector(".sidenav")
                     .setAttribute("style", "left:-400px;transition:0.5s;");
             }
+            // document.querySelectorAll('.hideFlashMessage').forEach(icon => {
+            //     icon.addEventListener('click', () => icon.parentNode.style.display = "none");
+            // });
 
         </script>
     </body>

@@ -10,7 +10,7 @@ export default function MessageList({ isAddingMessage, messages, onMessagesHeigh
     }, [messages]); // Dépendance au tableau de messages
 
     return (
-        <div className="messages" >
+        <div className="messages">
 
             {messages && Array.isArray(messages) && messages.length > 0 ? (
                 messages.map((msg, index) => (
@@ -37,6 +37,7 @@ export default function MessageList({ isAddingMessage, messages, onMessagesHeigh
                             </div>
                         )}
                     </div>
+
                 ))
             ) : (
                 <OpenAILogo/>
