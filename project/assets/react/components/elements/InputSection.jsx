@@ -32,7 +32,7 @@ export default function InputSection({ addMessage }) {
                     rows="4"
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
-                    style={{ maxHeight: maxHeight + "px", overflow: "hidden" }}
+                    style={{ maxHeight: maxHeight + "px", overflowY: "auto" }}
                 ></textarea>
                 <div className="submitIcon">
                     <button type="submit">
