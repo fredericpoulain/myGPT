@@ -26,14 +26,17 @@ use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 class HomeController extends AbstractController
 {
     private $parsedown;
-    public function __construct(private readonly Client $openAIClient){
+
+    public function __construct(private readonly Client $openAIClient)
+    {
         $this->parsedown = new Parsedown();
     }
+
     #[Route('/', name: 'app_home')]
     public function home(ChatRepository $chatRepository): Response
     {
         $chats = [];
-        if ($this->getUser()){
+        if ($this->getUser()) {
             $chats = $chatRepository->findBy(
                 ['user' => $this->getUser()],
                 ['createdAt' => 'DESC']
@@ -49,6 +52,7 @@ class HomeController extends AbstractController
     #[Route('/getChat', name: 'app_getChat')]
     public function getChatSession(SessionInterface $session, CreateArrayService $createArrayService): JsonResponse
     {
+
         $chatSession = $session->get('chatSession', []);
         $arrayData = [];
         if (!empty($chatSession)) {
@@ -64,91 +68,98 @@ class HomeController extends AbstractController
      */
     #[Route('/addChat', name: 'app_addChat')]
     public function addChat(
-        SessionInterface $session,
-        Request $request,
-        FormatTextService $formatTextService,
-        CreateArrayService $createArrayService,
+        SessionInterface       $session,
+        Request                $request,
+        FormatTextService      $formatTextService,
+        CreateArrayService     $createArrayService,
         EntityManagerInterface $entityManager,
-        ChatRepository $chatRepository,
-        ChatService $chatService,
-        ImageGenerateService $imageGenerateService
+        ChatRepository         $chatRepository,
+        ChatService            $chatService,
+        ImageGenerateService   $imageGenerateService
     ): JsonResponse
     {
+        try {
+            // On récupère la session et les données de la requête
+            $chatSession = $session->get('chatSession', []);
+            $data = json_decode($request->getContent());
+            $messageUser = $data->message ?? '';
+            $model = $data->model ?? '';
 
-        // On récupère la session et les données de la requête
-        $chatSession = $session->get('chatSession', []);
-        $data = json_decode($request->getContent());
-        $messageUser = $data->message ?? '';
-        $model = $data->model ?? '';
+            // On vérifie si le modèle d'IA est autorisé
+            $authorizedModels = ["gpt-4o", "gpt-4-turbo", "gpt-3.5-turbo", "dall-e-3"];
 
-        // On vérifie si le modèle d'IA est autorisé
-        $authorizedModels = ["gpt-4o", "gpt-4-turbo", "gpt-3.5-turbo", "dall-e-3"];
-
-        if (!in_array($model, $authorizedModels)) {
-            return $this->json(['isSuccessfull' => false, 'data' => []]);
-        }
-
-        // On initialise la session si elle est vide
-        if (empty($chatSession)) {
-            $chatSession = [
-                'sessionId' => bin2hex(random_bytes(16)),
-                'messages' => [
-                    ['role' => 'system', 'content' => "Vous êtes un assistant expert en langages informatique et vous utilisez les meilleures pratiques de codage. Les solutions que vous apportez sont systématiquement les plus simples, tout en respectant le principe SOLID et de la 'Clean Architecture'."]
-                ]
-            ];
-        }
-
-        // On ajoute le message de l'utilisateur
-        $chatSession['messages'][] = ['role' => 'user', 'content' => $messageUser];
-
-        //Appel de l'API et reception de la réponse
-
-
-        if ($model === "dall-e-3"){
-            $messageGpt = $imageGenerateService->getResponse($this->openAIClient, $model, $messageUser);
-        }else{
-            //Si c'est un chat
-            $output = $chatService->getResponse($this->openAIClient, $model, $chatSession);
-            // Formater la réponse et mettre à jour la session
-            $messageGpt = $formatTextService->formatText($output, $this->parsedown);
-        }
-
-        $chatSession['messages'][] = ['role' => 'assistant', 'content' => $messageGpt];
-
-        //on n'enregistre pas le lien de l'image car l'image est éphémère
-        if ($model !== "dall-e-3"){
-            $session->set('chatSession', $chatSession);
-        }
-
-
-        // Enregistrement en base de données si l'utilisateur est connecté et si c'est un 'chat'
-        if ($this->getUser() && $model !== "dall-e-3") {
-
-            $sessionId = $chatSession['sessionId'];
-            $chat = $chatRepository->findOneBy(['sessionid' => $sessionId]);
-
-            //C'est une nouvelle discussion
-            if (!$chat){
-                $chat = new Chat();
-                $chat->setUser($this->getUser());
-                $chat->setSessionId($sessionId);
-                $chat->setSessiondata($chatSession);
-                $chat->setName(substr($chatSession['messages'][1]['content'], 0, 50) . '...');
-                $entityManager->persist($chat);
-                $entityManager->flush();
-
-            //si chat se trouve en base de donnée
-            }else{
-                $chat->setSessiondata($chatSession);
-                $entityManager->flush();
+            if (!in_array($model, $authorizedModels)) {
+                return $this->json(['isSuccessfull' => false, 'data' => []]);
             }
-        }
 
-        // Retourner la réponse JSON
-        return $this->json([
-            'isSuccessfull' => !empty($messageGpt),
-            'data' => $createArrayService->CreateArray($chatSession)
-        ]);
+            // On initialise la session si elle est vide
+            if (empty($chatSession)) {
+                $chatSession = [
+                    'sessionId' => bin2hex(random_bytes(16)),
+                    'messages' => [
+                        ['role' => 'system', 'content' => "Vous êtes un assistant expert en langages informatique et vous utilisez les meilleures pratiques de codage. Les solutions que vous apportez sont systématiquement les plus simples, tout en respectant le principe SOLID et de la 'Clean Architecture'."]
+                    ]
+                ];
+            }
+
+            // On ajoute le message de l'utilisateur
+            $chatSession['messages'][] = ['role' => 'user', 'content' => $messageUser];
+
+            //Appel de l'API et reception de la réponse
+
+
+            if ($model === "dall-e-3") {
+                $messageGpt = $imageGenerateService->getResponse($this->openAIClient, $model, $messageUser);
+            } else {
+                //Si c'est un chat
+                $output = $chatService->getResponse($this->openAIClient, $model, $chatSession);
+                // Formater la réponse et mettre à jour la session
+                $messageGpt = $formatTextService->formatText($output, $this->parsedown);
+            }
+
+            $chatSession['messages'][] = ['role' => 'assistant', 'content' => $messageGpt];
+
+            //on n'enregistre pas le lien de l'image car l'image est éphémère
+            if ($model !== "dall-e-3") {
+                $session->set('chatSession', $chatSession);
+            }
+
+
+            // Enregistrement en base de données si l'utilisateur est connecté et si c'est un 'chat'
+            if ($this->getUser() && $model !== "dall-e-3") {
+
+                $sessionId = $chatSession['sessionId'];
+                $chat = $chatRepository->findOneBy(['sessionid' => $sessionId]);
+
+                //C'est une nouvelle discussion
+                if (!$chat) {
+                    $chat = new Chat();
+                    $chat->setUser($this->getUser());
+                    $chat->setSessionId($sessionId);
+                    $chat->setSessiondata($chatSession);
+                    $chat->setName(substr($chatSession['messages'][1]['content'], 0, 50) . '...');
+                    $entityManager->persist($chat);
+                    $entityManager->flush();
+
+                    //si chat se trouve en base de donnée
+                } else {
+                    $chat->setSessiondata($chatSession);
+                    $entityManager->flush();
+                }
+            }
+
+            // Retourner la réponse JSON
+            return $this->json([
+                'isSuccessfull' => !empty($messageGpt),
+                'data' => $createArrayService->CreateArray($chatSession)
+            ]);
+        } catch (\Exception $e) {
+            // Gérer les exceptions et retourner une réponse d'erreur
+            return $this->json([
+                'isSuccessfull' => false,
+                'error' => $e->getMessage()
+            ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
 
@@ -162,6 +173,7 @@ class HomeController extends AbstractController
         }
         return $this->redirectToRoute('app_home');
     }
+
     #[Route('/supprimer-conversation/{sessionid}', name: 'app_deleteChatSession')]
     public function deleteChatSession(Chat $chat, EntityManagerInterface $entityManager, SessionInterface $session): RedirectResponse
     {
