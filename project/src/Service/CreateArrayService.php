@@ -17,7 +17,7 @@ class CreateArrayService
             if ($message["role"] === "user") {
                 // Stocker le message de l'utilisateur temporairement
                 $tempUserMessage = $message["content"];
-            } elseif ($message["role"] === "assistant" && !empty($tempUserMessage)) {
+            } elseif ($message["role"] === "system" && !empty($tempUserMessage)) {
                 // Ajouter la paire de messages au tableau de sortie
                 $outputArray["messages"][] = [
                     "userMessage" => $tempUserMessage,
@@ -27,7 +27,7 @@ class CreateArrayService
                 $tempUserMessage = "";
             }
         }
-
+//        dd($outputArray);
         return $outputArray;
     }
 }

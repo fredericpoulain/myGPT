@@ -111,7 +111,7 @@ class HomeController extends AbstractController
 
             //Appel de l'API et reception de la réponse
 
-//            dd($chatSession);
+
             if ($model === "dall-e-3") {
                 $messageGpt = $imageGenerateService->getResponse($this->openAIClient, $model, $messageUser);
             } else {
@@ -121,10 +121,10 @@ class HomeController extends AbstractController
                 $messageGpt = $formatTextService->formatText($output, $this->parsedown);
             }
 
-            $chatSession['messages'][] = ['role' => 'System assistant', 'content' => $messageGpt];
+            $chatSession['messages'][] = ['role' => 'system', 'content' => $messageGpt];
 
 
-
+//            dd($chatSession);
             $session->set('chatSession', $chatSession);
             // Enregistrement en base de données si l'utilisateur est connecté
             if ($this->getUser()) {
