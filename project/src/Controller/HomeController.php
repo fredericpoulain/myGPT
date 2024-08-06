@@ -84,6 +84,7 @@ class HomeController extends AbstractController
             $data = json_decode($request->getContent());
             $messageUser = $data->message ?? '';
             $model = $data->model ?? '';
+            $role = $data->role ?? 'Vous êtes un assistant';
 
             // On vérifie si le modèle d'IA est autorisé
             $authorizedModels = ["gpt-4o", "gpt-4-turbo", "gpt-3.5-turbo", "dall-e-3"];
@@ -92,23 +93,25 @@ class HomeController extends AbstractController
                 return $this->json(['isSuccessfull' => false, 'data' => []]);
             }
 
-            $content = "Vous êtes un assistant expert en langages informatique et vous utilisez les meilleures pratiques de codage. Les solutions que vous apportez sont systématiquement les plus simples, tout en respectant le principe SOLID et de la 'Clean Architecture'.";
+//            $role  = "Vous êtes un assistant expert en langages informatique et vous utilisez les meilleures pratiques de codage. Les solutions que vous apportez sont systématiquement les plus simples, tout en respectant le principe SOLID et de la 'Clean Architecture'.";
+//            $role = "tu es assistant expert développeur web freelance wordpress et formateur.";
             // On initialise la session si elle est vide
             if (empty($chatSession)) {
                 $chatSession = [
                     'sessionId' => bin2hex(random_bytes(16)),
-                    'messages' => [
-                        ['role' => 'system', 'content' => $content]
-                    ]
+//                    'messages' => [
+//                        ['role' => 'system', 'content' => $role ]
+//                    ]
                 ];
             }
 
             // On ajoute le message de l'utilisateur
+            $chatSession['messages'][] = ['role' => 'system', 'content' => $role];
             $chatSession['messages'][] = ['role' => 'user', 'content' => $messageUser];
 
             //Appel de l'API et reception de la réponse
 
-
+//            dd($chatSession);
             if ($model === "dall-e-3") {
                 $messageGpt = $imageGenerateService->getResponse($this->openAIClient, $model, $messageUser);
             } else {
@@ -118,7 +121,7 @@ class HomeController extends AbstractController
                 $messageGpt = $formatTextService->formatText($output, $this->parsedown);
             }
 
-            $chatSession['messages'][] = ['role' => 'assistant', 'content' => $messageGpt];
+            $chatSession['messages'][] = ['role' => 'System assistant', 'content' => $messageGpt];
 
 
 

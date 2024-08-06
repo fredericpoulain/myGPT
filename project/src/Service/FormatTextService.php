@@ -9,9 +9,9 @@ class FormatTextService
 
         $formattedText = $this->addTagsPreAndCode($text);
         // Markdown to html
-        $html = $this->convertMarkdownToHtml($formattedText, $parsedown);
+//        $formattedText = $this->convertMarkdownToHtml($formattedText, $parsedown);
         // Conserver les sauts de ligne
-        return nl2br($html);
+        return nl2br($formattedText);
     }
 
     private function addTagsPreAndCode($text): string

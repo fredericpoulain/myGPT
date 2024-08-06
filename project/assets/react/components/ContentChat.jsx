@@ -3,12 +3,15 @@ import InputSection from "./elements/InputSection";
 import MessageList from "./elements/MessageList";
 import Scroll from "./elements/svg/Scroll";
 
-export default function ContentChat({isAddingMessage, chat, addMessage, canScroll, setCanScroll, selectedModel, setSelectedModel}) {
+export default function ContentChat({isAddingMessage, chat, addMessage, canScroll, setCanScroll, selectedModel, setSelectedModel, setRole}) {
 
 
 
     const handleSelectChange = (event) => {
         setSelectedModel(event.target.value);
+    };
+    const handleRoleChange = (event) => {
+        setRole(event.target.value);
     };
 
     const [showScroll, setShowScroll] = useState(false);
@@ -49,14 +52,17 @@ export default function ContentChat({isAddingMessage, chat, addMessage, canScrol
 
     return (
         <div className="contentChat">
-            <div className="blocSelect">
+            <div className="headerChat">
                 <select name="format" id="format" value={selectedModel} onChange={handleSelectChange}>
                     <option value="gpt-4o">GPT-4o</option>
                     <option value="gpt-4-turbo">GPT-4-turbo</option>
                     <option value="gpt-3.5-turbo">GPT-3.5-turbo</option>
                     <option value="dall-e-3">Dall-e-3</option>
                 </select>
+                <input onChange={handleRoleChange} className="headerChatInput" type="text" placeholder="Rôle IA par défaut : 'vous êtes un assistant' (à modifier selon vos préférences)"/>
+
             </div>
+
             <MessageList isAddingMessage={isAddingMessage} messages={chat}/>
             {showScroll && !isAddingMessage && canScroll && <Scroll/>}
             <InputSection addMessage={addMessage}/>
