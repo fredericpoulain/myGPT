@@ -55,7 +55,7 @@ export default function ContentChat({isAddingMessage, chat, addMessage, canScrol
             <div className="headerChat">
                 <select name="format" id="format" value={selectedModel} onChange={handleSelectChange}>
                     <option value="gpt-4o">GPT-4o</option>
-                    <option value="gpt-4-turbo">GPT-4-turbo</option>
+                    <option value="gpt-4o-mini">GPT-4o-mini</option>
                     <option value="gpt-3.5-turbo">GPT-3.5-turbo</option>
                     <option value="dall-e-3">Dall-e-3</option>
                 </select>

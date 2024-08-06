@@ -9,7 +9,7 @@ export function Home() {
     const [chat, setChat] = useState([]);
     const [isAddingMessage, setIsAddingMessage] = useState(false);
     const [canScroll, setCanScroll] = useState(false);
-    const [selectedModel, setSelectedModel] = useState("gpt-4o");
+    const [selectedModel, setSelectedModel] = useState("gpt-4o-mini");
     const [role, setRole] = useState("Vous êtes un assistant");
     //***********************************************
     //uniquement lors du chargement de la page

@@ -86,6 +86,7 @@ nav div {
 
 .main {
     display: flex;
+    overflow: hidden;
 }
 
 /*Side Nav*/
@@ -361,6 +362,7 @@ select {
     display: flex;
     justify-content: center;
     align-items: center;
+    width: 100%;
 }
 
 .messages {
@@ -418,7 +420,7 @@ select {
 .messageContent {
     text-align: start;
     margin-top: 5px;
-    /*width: 100%;*/
+    width: 100%;
     /*max-width: 100%;*/
 }
 
@@ -538,6 +540,7 @@ code,
     bottom: 130px;
     width: -webkit-fill-available;
     width: -moz-available;
+    pointer-events: none;
 }
 
 
@@ -671,4 +674,8 @@ code,
     .contentChat {
         margin: 50px 0 0 0;
     }
+    .messages{
+        padding: 5px;
+    }
+
 }

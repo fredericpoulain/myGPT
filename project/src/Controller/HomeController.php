@@ -87,7 +87,7 @@ class HomeController extends AbstractController
             $role = $data->role ?? 'Vous êtes un assistant';
 
             // On vérifie si le modèle d'IA est autorisé
-            $authorizedModels = ["gpt-4o", "gpt-4-turbo", "gpt-3.5-turbo", "dall-e-3"];
+            $authorizedModels = ["gpt-4o", "gpt-4o-mini", "gpt-3.5-turbo", "dall-e-3"];
 
             if (!in_array($model, $authorizedModels)) {
                 return $this->json(['isSuccessfull' => false, 'data' => []]);
